@@ -27,32 +27,32 @@ export function roomInfoController(room: Room) {
       return
     }
 
-    res.send({ roomName: room.name, users: room.users })
+    res.send({ roomName: room.name, users: room.users, msgs: room.messages })
   }
 }
 
 export function joinRoomController(room: Room) {
   return (req: Request, res: Response) => {
-    const username: string = req.body.username
+    const nickname: string = req.body.nickname
     const passphrase: string = req.body.passphrase
 
     if (passphrase !== room.passphrase) {
       res.sendStatus(401)
       return
     }
-    const token = jwtService.generateToken(username)
+    const token = jwtService.generateToken(nickname)
     console.log('token: ', token)
 
     try {
-      room.addUser(username)
+      room.addUser(nickname)
     }
     catch (e) {
-      console.log("Username already taken")
+      console.log(e)
       res.sendStatus(400)
       return
     }
 
-    console.log('user joined: ', username)
+    console.log('user joined: ', nickname)
 
     // set cookie and send room info, including token
     res.cookie('token', token, { httpOnly: true })
