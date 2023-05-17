@@ -10,7 +10,10 @@ export default class Room {
     public messages: Message[] = []
 
     public addUser(username: string): void {
-        if (this.users.includes(username)) {
+        if (username === '') {
+            throw new Error('Username cannot be empty')
+        }
+        else if (this.users.includes(username)) {
             throw new Error('Username already taken')
         }
 
