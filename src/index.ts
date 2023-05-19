@@ -36,10 +36,6 @@ app.post('/api/message', controllers.messageController(room, io))
 app.get('/api/messages', controllers.messagesController(room))
 
 io.on('connection', (socket) => {
-  socket.on('message', (msg) => {
-    console.log(msg);
-    io.emit('broadcast-message', `${msg}`)
-  })
   socket.on('user-enter', (msg) => {
     console.log(msg);
     io.emit('broadcast-user-enter', `${msg}`)
