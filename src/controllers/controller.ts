@@ -21,13 +21,14 @@ export function roomInfoController(room: Room) {
     }
 
     console.log('token: ', token)
+    const nickname = jwtService.getNicknameFromToken(token)
 
     if (!jwtService.isValidToken(token)) {
       res.sendStatus(401)
       return
     }
 
-    res.send({ roomName: room.name, users: room.users, msgs: room.messages })
+    res.send({ roomName: room.name, users: room.users, msgs: room.messages, nickname: nickname })
   }
 }
 
@@ -54,7 +55,6 @@ export function joinRoomController(room: Room) {
 
     console.log('user joined: ', nickname)
 
-    // set cookie and send room info, including token
     res.cookie('token', token, { httpOnly: true })
     res.send({ roomName: room.name, users: room.users, token: token })
   }
