@@ -9,12 +9,15 @@ export default class Room {
     public users: string[] = []
     public messages: Message[] = []
 
-    public addUser(username: string): void {
-        if (this.users.includes(username)) {
-            throw new Error('Username already taken')
+    public addUser(nickname: string): void {
+        if (nickname === '') {
+            throw new Error('nickname cannot be empty')
+        }
+        else if (this.users.includes(nickname)) {
+            throw new Error('nickname already taken')
         }
 
-        this.users.push(username)
+        this.users.push(nickname)
     }
 
     public addMessage(message: Message): void {

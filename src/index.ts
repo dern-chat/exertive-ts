@@ -21,7 +21,7 @@ app.use(bodyparser.urlencoded({ extended: false }))
 app.use(function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type')
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Authorization')
   res.setHeader('Access-Control-Allow-Credentials', 'true')
 
   next()
@@ -36,10 +36,6 @@ app.post('/api/message', controllers.messageController(room, io))
 app.get('/api/messages', controllers.messagesController(room))
 
 io.on('connection', (socket) => {
-  socket.on('message', (msg) => {
-    console.log(msg);
-    io.emit('broadcast-message', `${msg}`)
-  })
   socket.on('user-enter', (msg) => {
     console.log(msg);
     io.emit('broadcast-user-enter', `${msg}`)
