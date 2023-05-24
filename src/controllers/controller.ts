@@ -32,7 +32,7 @@ export function roomInfoController(room: Room) {
     }
 }
 
-export function joinRoomController(room: Room) {
+export function joinRoomController(room: Room, io: Server) {
     return (req: Request, res: Response) => {
         const nickname: string = req.body.nickname
         const passphrase: string = req.body.passphrase
@@ -52,6 +52,8 @@ export function joinRoomController(room: Room) {
             res.sendStatus(400)
             return
         }
+
+        io.emit('broadcast-user-enter', nickname)
 
         console.log('user joined: ', nickname)
 

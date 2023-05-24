@@ -31,7 +31,7 @@ const room: Room = new Room("Test Room", '1234')
 
 app.get('/', controllers.indexController)
 app.get('/api/room-info', controllers.roomInfoController(room))
-app.post('/api/join-room', controllers.joinRoomController(room))
+app.post('/api/join-room', controllers.joinRoomController(room, io))
 app.post('/api/message', controllers.messageController(room, io))
 app.get('/api/messages', controllers.messagesController(room))
 
