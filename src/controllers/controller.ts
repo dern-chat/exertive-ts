@@ -3,6 +3,7 @@ import Room from '../types/room'
 import Message from '../types/message'
 import { Server } from 'socket.io'
 import * as jwtService from '../services/jwt.service'
+import { MESSAGE_EVENT, USER_JOIN_EVENT } from '../socket/event'
 
 
 export function indexController(req: Request, res: Response) {
@@ -53,7 +54,7 @@ export function joinRoomController(room: Room, io: Server) {
             return
         }
 
-        io.emit('broadcast-user-enter', nickname)
+        io.emit(USER_JOIN_EVENT, nickname)
 
         console.log('user joined: ', nickname)
 
@@ -69,7 +70,7 @@ export function messageController(room: Room, io: Server) {
         room.addMessage(message)
         console.log('message received: ', message)
 
-        io.emit('broadcast-message', message)
+        io.emit(MESSAGE_EVENT, message)
         console.log('message broadcasted: ', message)
 
         res.sendStatus(200)
