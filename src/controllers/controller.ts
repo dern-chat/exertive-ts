@@ -7,16 +7,12 @@ import { MESSAGE_EVENT, USER_JOIN_EVENT } from '../socket/event'
 
 export function roomInfoController(room: Room) {
     return (req: Request, res: Response) => {
-        console.log('room info requested')
-
-        console.log('auth header: ', req.header('Authorization'))
         const token = req.header('Authorization')?.replace('Bearer ', '')
         if (!token) {
             res.sendStatus(401)
             return
         }
 
-        console.log('token: ', token)
         const nickname = jwtService.getNicknameFromToken(token)
 
         if (!jwtService.isValidToken(token)) {
@@ -38,20 +34,16 @@ export function joinRoomController(room: Room, io: Server) {
             return
         }
         const token = jwtService.generateToken(nickname)
-        console.log('token: ', token)
 
         try {
             room.addUser(nickname)
         }
         catch (e) {
-            console.log(e)
             res.sendStatus(400)
             return
         }
 
         io.emit(USER_JOIN_EVENT, nickname)
-
-        console.log('user joined: ', nickname)
 
         res.cookie('token', token, { httpOnly: true })
         res.send({ roomName: room.name, users: room.users, token: token })
@@ -63,10 +55,8 @@ export function messageController(room: Room, io: Server) {
         const { author, content, time } = req.body
         const message = new Message(author, content, time)
         room.addMessage(message)
-        console.log('message received: ', message)
 
         io.emit(MESSAGE_EVENT, message)
-        console.log('message broadcasted: ', message)
 
         res.sendStatus(200)
     }
@@ -74,8 +64,6 @@ export function messageController(room: Room, io: Server) {
 
 export function messagesController(room: Room) {
     return (req: Request, res: Response) => {
-        console.log('messages requested')
-
         res.send(room.messages)
     }
 }

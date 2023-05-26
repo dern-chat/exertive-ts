@@ -10,7 +10,7 @@ import path from 'path'
 import fs from 'fs'
 
 (async () => {
-    dotenv.config();
+    dotenv.config()
 
     const userInput = await prompts([
         {
@@ -18,13 +18,13 @@ import fs from 'fs'
             name: 'roomName',
             message: 'Enter room name',
             initial: 'Chat Room',
-            validate: value => value.length < 3 ? `Room name must be at least 3 characters` : true
+            validate: value => value.length < 3 ? 'Room name must be at least 3 characters' : true
         },
         {
             type: 'password',
             name: 'roomPassword',
             message: 'Enter room password',
-            validate: value => value.length < 8 ? `Room password must be at least 8 characters` : true
+            validate: value => value.length < 8 ? 'Room password must be at least 8 characters' : true
         }
     ])
 
