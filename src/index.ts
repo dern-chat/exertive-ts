@@ -6,6 +6,8 @@ import Room from './types/room'
 import * as controllers from './controllers/controller'
 import * as dotenv from 'dotenv'
 import prompts from 'prompts'
+import path from 'path'
+import fs from 'fs'
 
 (async () => {
     dotenv.config();
@@ -47,15 +49,20 @@ import prompts from 'prompts'
 
     const room: Room = new Room(userInput.roomName, userInput.roomPassword)
 
-    app.get('/', controllers.indexController)
     app.get('/api/room-info', controllers.roomInfoController(room))
     app.post('/api/join-room', controllers.joinRoomController(room, io))
     app.post('/api/message', controllers.messageController(room, io))
     app.get('/api/messages', controllers.messagesController(room))
+    if (fs.existsSync('./public')) {
+        app.get('/', (req, res) => {
+            res.sendFile(path.join(__dirname, '../public/index.html'))
+        })
+
+        app.use('/', express.static('./public'))
+    }
 
     io.on('connection', (socket) => {
         socket.on('user-enter', (msg) => {
-            console.log(msg);
             io.emit('broadcast-user-enter', `${msg}`)
         })
     })

@@ -5,11 +5,6 @@ import { Server } from 'socket.io'
 import * as jwtService from '../services/jwt.service'
 import { MESSAGE_EVENT, USER_JOIN_EVENT } from '../socket/event'
 
-
-export function indexController(req: Request, res: Response) {
-    res.send('Hello World!')
-}
-
 export function roomInfoController(room: Room) {
     return (req: Request, res: Response) => {
         console.log('room info requested')
