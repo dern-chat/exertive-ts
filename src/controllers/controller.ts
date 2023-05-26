@@ -7,7 +7,7 @@ import { MESSAGE_EVENT, USER_JOIN_EVENT } from '../socket/event'
 
 export function roomInfoController(room: Room) {
     return (req: Request, res: Response) => {
-        const token = req.header('Authorization')?.replace('Bearer ', '')
+        const token = req.header('Cookie')?.split(';').find(cookie => cookie.startsWith('token'))?.split('=')[1]
         if (!token) {
             res.sendStatus(401)
             return
