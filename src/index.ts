@@ -68,6 +68,6 @@ import fs from 'fs'
     })
 
     http.listen(2323, () => {
-        console.log('listening on http://127.0.0.1:2323')
+        console.log('let\'s chat!')
     })
 })()
