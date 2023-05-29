@@ -4,21 +4,16 @@ import Message from '../types/message'
 import { Server } from 'socket.io'
 import * as jwtService from '../services/jwt.service'
 import { MESSAGE_EVENT, USER_JOIN_EVENT } from '../socket/event'
+import { checkAuth } from '../services/auth.service'
 
 export function roomInfoController(room: Room) {
     return (req: Request, res: Response) => {
-        const token = req.header('Cookie')?.split(';').find(cookie => cookie.startsWith('token'))?.split('=')[1]
-        if (!token) {
+        if (!checkAuth(req)) {
             res.sendStatus(401)
             return
         }
 
-        const nickname = jwtService.getNicknameFromToken(token)
-
-        if (!jwtService.isValidToken(token)) {
-            res.sendStatus(401)
-            return
-        }
+        const nickname = jwtService.getNicknameFromReq(req)
 
         res.send({ roomName: room.name, users: room.users, msgs: room.messages, nickname: nickname })
     }
@@ -52,6 +47,11 @@ export function joinRoomController(room: Room, io: Server) {
 
 export function messageController(room: Room, io: Server) {
     return (req: Request, res: Response) => {
+        if (!checkAuth(req)) {
+            res.sendStatus(401)
+            return
+        }
+
         const { author, content, time } = req.body
         const message = new Message(author, content, time)
         room.addMessage(message)
